@@ -3,7 +3,6 @@ import io.netty.util.ReferenceCountUtil.release
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("maven-publish")
 }
 
 android {
@@ -35,10 +34,8 @@ android {
         jvmTarget = "1.8"
     }
     publishing {
-        singleVariant("release-1") {
-            // if you don't want sources/javadoc, remove these lines
+        singleVariant("release") {
             withSourcesJar()
-            withJavadocJar()
         }
     }
 }
@@ -54,23 +51,6 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            register<MavenPublication>("palette") {
-                from(components["release"])
-                groupId = "ru.mobilestingray"
-                artifactId = "palette"
-                version = "1.0.0"
-
-                pom {
-                    name.set("pomPalette")
-                    description.set("pomDescription")
-                }
-            }
-        }
-        repositories {
-            mavenLocal()
-        }
-    }
+apply{
+        from("../publish-package.gradle")
 }
